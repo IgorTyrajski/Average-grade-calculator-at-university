@@ -34,11 +34,12 @@ def printSubjects(subjects):
             print(f"{sub}: {marks_string}")
 
 def writeMarksToFile(subjects):
-    with open('marks.csv','w',newline='') as f:
-        fileWriter = csv.writer(f,delimiter=';')
-        for subject in subjects.keys():
-            row = [subject, subjects[subject][0]] + subjects[subject][1]
-            fileWriter.writerow(row)
+    if len(subjects) != 0:
+        with open('marks.csv','w',newline='') as f:
+            fileWriter = csv.writer(f,delimiter=';')
+            for subject in subjects.keys():
+                row = [subject, subjects[subject][0]] + subjects[subject][1]
+                fileWriter.writerow(row)
 
 
 def readMarksFromFile(subjects):
@@ -149,41 +150,55 @@ def editData(subjects):
             error = True
             print("Input correct data")
             continue
-
-        newMark = input("Input new mark: ")
-        try:
-            newMark = float(newMark)
-            if newMark > 5 or newMark < 2:
-                print("Input correct value")
-                error = True
-        except ValueError:
-            newMark = 'x'
+        if not error:
+            newMark = input("Input new mark: ")
+            try:
+                newMark = float(newMark)
+                if newMark > 5 or newMark < 2:
+                    print("Input correct value")
+                    error = True
+            except ValueError:
+                newMark = 'x'
 
         if error == False:
             subjects[sub][1][markOpt - 1] = newMark
             break
 
+def deleteAllData():
+    open("marks.csv", "w").close()
+#todo delete one subject
+
 subjects = {}
 os.system(ClearCommand)
-print("Options: ")
-print("1. Insert new data")
-print("2. Modify last data")
-print("3. Print last data")
-opt = input("What would you like to do: ")
-if opt == '1':
-    inputData(subjects)
-elif opt == '2':
-    readMarksFromFile(subjects)
-    editData(subjects)
-    os.system(ClearCommand)
-    printSubjects(subjects)
-elif opt == '3':
-    readMarksFromFile(subjects)
-    printSubjects(subjects)
-else:
-    print("Please input correct option")
 
-writeMarksToFile(subjects)
+while True:
+    do_print = True
+    print("Options: ")
+    print("1. Insert new data")
+    print("2. Modify last data")
+    print("3. Print last data")
+    print("4. Delete all previous  data")
+    print("5. Exit")
+    opt = input("What would you like to do: ")
+    if opt in ['1','insert'] :
+        inputData(subjects)
+    elif opt in ['2','modify']:
+        readMarksFromFile(subjects)
+        editData(subjects)
+        os.system(ClearCommand)
+        printSubjects(subjects)
+    elif opt in ['3', 'print']:
+        readMarksFromFile(subjects)
+        printSubjects(subjects)
+    elif opt in ['4','delete']:
+        deleteAllData()
+        do_print = False
+    elif opt in ['5', 'exit']:
+        break
+    else:
+        print("Please input correct option")
 
-print(f"Calculated average for this semester: {round(calcWeightedAverage(subjects),2)}")
-input("Press ENTER to continue...")
+    writeMarksToFile(subjects)
+    if do_print and len(subjects) != 0:
+        print(f"Calculated average for this semester: {round(calcWeightedAverage(subjects),2)}")
+    input("Press ENTER to continue...")
