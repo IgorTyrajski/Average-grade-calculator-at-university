@@ -67,7 +67,7 @@ def readMarksFromFile(subjects):
 def inputData(subjects):
     while True:
         os.system(ClearCommand)
-        numOfSub = input("Input number of subjects in your semester: ")
+        numOfSub = input("Input number of subjects you would like to add: ")
 
         try:
             numOfSub = int(numOfSub)
@@ -124,10 +124,11 @@ def inputData(subjects):
 def editData(subjects):
     os.system(ClearCommand)
     printSubjects(subjects)
-    sub = str(input("Which subject data would you like to modify: "))
     while True:
+        sub = str(input("Which subject data would you like to modify: "))
         if sub not in subjects.keys():
-            sub = str(input("Which subject data would you like to modify: "))
+            print("Wrong subject\n")
+
         else:
             break
 
@@ -165,8 +166,19 @@ def editData(subjects):
             break
 
 def deleteAllData():
+    os.system(ClearCommand)
     open("marks.csv", "w").close()
-#todo delete one subject
+
+def deleteOneSub():
+    os.system(ClearCommand)
+    printSubjects(subjects)
+    while True:
+        sub = str(input("Which subject data would you like to delete: "))
+        if sub not in subjects.keys():
+            print("Wrong subject\n")
+        else:
+            break
+    subjects.pop(sub)
 
 subjects = {}
 os.system(ClearCommand)
@@ -177,8 +189,9 @@ while True:
     print("1. Insert new data")
     print("2. Modify last data")
     print("3. Print last data")
-    print("4. Delete all previous  data")
-    print("5. Exit")
+    print("4. Delete all previous data")
+    print("5. Delete one subject from previous data")
+    print("6. Exit")
     opt = input("What would you like to do: ")
     if opt in ['1','insert'] :
         inputData(subjects)
@@ -193,7 +206,11 @@ while True:
     elif opt in ['4','delete']:
         deleteAllData()
         do_print = False
-    elif opt in ['5', 'exit']:
+    elif opt in ['5', 'delete one']:
+        readMarksFromFile(subjects)
+        deleteOneSub()
+        printSubjects(subjects)
+    elif opt in ['6', 'exit']:
         break
     else:
         print("Please input correct option")
