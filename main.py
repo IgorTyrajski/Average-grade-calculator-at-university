@@ -184,6 +184,7 @@ subjects = {}
 os.system(ClearCommand)
 
 while True:
+    os.system(ClearCommand)
     do_print = True
     print("Options: ")
     print("1. Insert new data")
@@ -202,6 +203,7 @@ while True:
         printSubjects(subjects)
     elif opt in ['3', 'print']:
         readMarksFromFile(subjects)
+        os.system(ClearCommand)
         printSubjects(subjects)
     elif opt in ['4','delete']:
         deleteAllData()
